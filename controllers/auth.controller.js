@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/user.model";
+import User from "../models/user.model.js";
+import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
 
 export const signUp = async (req, res, next) => {
-  const session = mongoose.startSession();
-  await session.startTransaction();
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
     const { name, email, password } = req.body;
@@ -56,6 +57,48 @@ export const signUp = async (req, res, next) => {
   }
 };
 
-export const signIn = async (req, res, next) => {};
+export const signIn = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // Checking if email and password are there or not
+    if (!email || !password) {
+      const error = new Error("Enter email and password correctly");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      const error = new Error("User not found in Database");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    // Validating the current password with the original password for that account
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+      const error = new Error("Invalid Password");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: JWT_EXPIRES_IN,
+    });
+
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "User Logged in successfully",
+        data: { token, user },
+      });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const signOut = async (req, res, next) => {};
