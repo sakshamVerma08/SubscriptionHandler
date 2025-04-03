@@ -2,6 +2,9 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/env.js";
 import User from "../models/user.model.js";
 
+// This is the authentication middleware. It asks the questions--> "Who are you?"
+// Keep in mind that Authentication precedes Authorization in sequence.
+// Authorization asks the question --> "What are you allowed to access?"
 const authorized = async (req, res, next) => {
   try {
     let token;
@@ -28,7 +31,6 @@ const authorized = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
-
 
     const user = await User.findById(decoded.userId);
 
