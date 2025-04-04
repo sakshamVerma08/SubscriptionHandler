@@ -11,14 +11,15 @@ const arcjetMiddleware = async (req, res, next) => {
       if (decision.reason.isBot())
         return res.status(403).json({ error: "Bot Detected" });
 
+      
+      
       return res.status(403).json({ error: "Access Denied" });
     }
-
-     next();
+    next();
   } catch (error) {
     console.log(`Arcjet Middleware Error: ${error}`);
     next(error);
   }
 };
 
- export default arcjetMiddleware;
+export default arcjetMiddleware;

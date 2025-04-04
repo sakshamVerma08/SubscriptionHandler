@@ -14,7 +14,7 @@ const subscriptionSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Subscription price is required"],
       min: 0,
-      max: 100,
+      max: 1000,
     },
 
     currency: {
