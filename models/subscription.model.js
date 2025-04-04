@@ -23,11 +23,14 @@ const subscriptionSchema = new mongoose.Schema(
       default: "INR",
     },
 
-    frequency: { type: String, enum: ["daily", "weekly", "monthly", "yearly"] },
+    frequency: {
+      type: String,
+      enum: ["daily", "weekly", "monthly", "yearly", "annual"],
+    },
 
     category: {
       type: String,
-      enum: ["sports", "news", "entertainment", "lifestyle"],
+      enum: ["sports", "news", "entertainment", "lifestyle", "education"],
       required: true,
     },
 
