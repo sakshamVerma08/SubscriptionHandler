@@ -1,9 +1,8 @@
 import dayjs from "dayjs";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
+const { serve } = require("@upstash/workflow/express");
 import Subscription from "../models/subscription.model.js";
-
-import { serve } from "@upstash/workflow/nextjs";
 
 export const sendReminders = serve(async (context) => {
   const REMINDERS = [7, 5, 2, 1];
