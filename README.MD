@@ -1,147 +1,202 @@
-# Subscription Management System API
+# 📦 Subscription Handler API
 
-## 🤖 Introduction
-
-Build a production-ready Subscription Management System API that handles real users, real money, and real business logic.
-
-Authenticate users using JWTs, connect a database, create models and schemas, and integrate it with ORMs. Structure the architecture of your API to ensure scalability and seamless communication with the frontend.
-
-If you're getting started and need assistance or face any bugs, join our active Discord community with over 50k+ members. It's a place where people help each other out.
-
-## ⚙️ Tech Stack
-
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB
-- **Authentication:** JWT
-- **Security:** Arcjet for advanced rate limiting and bot protection
-- **Logging & Debugging:** Custom logging mechanisms
-- **Email Automation:** Upstash for email reminders
-
-## 🔋 Features
-
-- **Advanced Rate Limiting and Bot Protection**: Secure the whole app using Arcjet.
-- **Database Modeling**: Models and relationships using MongoDB & Mongoose.
-- **JWT Authentication**: Secure user authentication and authorization.
-- **Global Error Handling**: Input validation and middleware integration.
-- **Logging Mechanisms**: Debugging and monitoring.
-- **Email Reminders**: Automate smart email reminders using Upstash.
-- **Modular Code Structure**: Ensures code reusability and scalability.
+This is a fully backend-focused API built using Node.js and Express. It allows users to manage subscriptions, receive email reminders, and handle authentication securely with bot protection and workflow automation.
 
 ---
 
-## 🤸 Quick Start
+## 🛠 Technologies Used
 
-Follow these steps to set up the project locally on your machine.
-
-### Prerequisites
-
-Ensure you have the following installed:
-
-- Git
-- Node.js
-- npm (Node Package Manager)
-
-### Cloning the Repository
-
-```bash
-git clone https://github.com/adrianhajdin/subscription-tracker-api.git
-cd subscription-tracker-api
-```
-
-### Installation
-
-Install dependencies using npm:
-
-```bash
-npm install
-```
-
-### Set Up Environment Variables
-
-Create a `.env.local` file in the root of your project and add the following content:
-
-```ini
-# PORT
-PORT=5500
-SERVER_URL="http://localhost:5500"
-
-# ENVIRONMENT
-NODE_ENV=development
-
-# DATABASE
-DB_URI=
-
-# JWT AUTH
-JWT_SECRET=
-JWT_EXPIRES_IN="1d"
-
-# ARCJET
-ARCJET_KEY=
-ARCJET_ENV="development"
-
-# UPSTASH
-QSTASH_URL=http://127.0.0.1:8080
-QSTASH_TOKEN=
-
-# NODEMAILER
-EMAIL_PASSWORD=
-```
-
-### Running the Project
-
-```bash
-npm run dev
-```
-
-Open `http://localhost:5500` in your browser or any HTTP client to test the project.
+- **Node.js + Express** – Server-side development
+- **MongoDB + Mongoose** – Database layer
+- **Nodemailer** – For sending email reminders
+- **Upstash** – Workflow automation (delayed reminder scheduling)
+- **Arcjet** – Bot protection
+- **Postman** – For API testing
 
 ---
 
-## 🕸️ API Routes
+## 📌 API Endpoints with Example Requests/Responses
 
-| Route                    | HTTP Method | Description                    |
-| ------------------------ | ----------- | ------------------------------ |
-| `/api/auth/register`     | POST        | Registers a new user           |
-| `/api/auth/login`        | POST        | Logs in a user and returns JWT |
-| `/api/users/:id`         | GET         | Fetches user details           |
-| `/api/users/:id`         | PUT         | Updates user details           |
-| `/api/subscriptions`     | POST        | Creates a new subscription     |
-| `/api/subscriptions`     | GET         | Fetches all subscriptions      |
-| `/api/subscriptions/:id` | GET         | Fetches subscription details   |
-| `/api/subscriptions/:id` | DELETE      | Cancels a subscription         |
+### 🔐 Auth Routes (`/api/auth`)
 
-### Example API Request
-
-#### Register User
-
-**Endpoint:** `/api/auth/register`
-**Method:** `POST`
-
+#### POST `/sign-up`
+**Request Body:**
 ```json
 {
   "name": "John Doe",
-  "email": "johndoe@example.com",
+  "email": "john@example.com",
   "password": "securepassword"
 }
 ```
-
-#### Response
-
+**Response:**
 ```json
 {
   "message": "User registered successfully",
-  "token": "your_jwt_token_here"
+  "user": { "id": "abc123", "name": "John Doe", "email": "john@example.com" }
+}
+```
+
+#### POST `/sign-in`
+**Request Body:**
+```json
+{
+  "email": "john@example.com",
+  "password": "securepassword"
+}
+```
+**Response:**
+```json
+{
+  "message": "Sign-in successful",
+  "token": "jwt-token-here"
+}
+```
+
+#### POST `/sign-out`
+**Response:**
+```json
+{
+  "message": "User signed out successfully"
 }
 ```
 
 ---
 
-## 📌 License
+### 📄 User Routes (`/api/users`)
 
-This project is licensed under the MIT License. Feel free to modify and use it.
+#### GET `/`
+**Headers:** `Authorization: Bearer <token>`
+**Response:**
+```json
+[ { "id": "1", "name": "John" }, { "id": "2", "name": "Jane" } ]
+```
+
+#### GET `/:id`
+**Response:**
+```json
+{ "id": "1", "name": "John", "email": "john@example.com" }
+```
+
+#### POST `/`
+**Mock Response:**
+```json
+{ "title": "POST user router" }
+```
+
+#### PUT `/:id`
+**Mock Response:**
+```json
+{ "title": "PUT user route" }
+```
+
+#### DELETE `/:id`
+**Mock Response:**
+```json
+{ "title": "DELETE user route" }
+```
 
 ---
 
-## 📞 Contact
+### 📦 Subscription Routes (`/api/subscriptions`)
 
-For any issues, you guys can connect with me on GitHub or my Linkedin (link in GitHub profile).
+#### GET `/`
+**Response:**
+```json
+[ { "id": "sub123", "name": "Netflix", "price": 10 }, { "id": "sub124", "name": "Spotify", "price": 5 } ]
+```
+
+#### GET `/user/:id`
+**Response:**
+```json
+[ { "userId": "1", "name": "Netflix" } ]
+```
+
+#### POST `/`
+**Request Body:**
+```json
+{
+  "userId": "1",
+  "name": "Netflix",
+  "price": 10,
+  "frequency": "monthly",
+  "renewalDate": "2025-05-01"
+}
+```
+**Response:**
+```json
+{ "message": "Subscription created successfully" }
+```
+
+#### POST `/:id`
+**Mock Response:**
+```json
+{ "title": "CREATE particular subscription" }
+```
+
+#### PUT `/:id`
+**Mock Response:**
+```json
+{ "title": "UPDATE particular subscription" }
+```
+
+#### DELETE `/:id`
+**Mock Response:**
+```json
+{ "title": "DELETE particular subscription" }
+```
+
+#### PUT `/:id/cancel`
+**Mock Response:**
+```json
+{ "title": "CANCEL particular subscription" }
+```
+
+#### GET `/users/:id`
+**Mock Response:**
+```json
+{ "title": "GET all the subscriptions of a single user" }
+```
+
+#### GET `/upcoming-renewals`
+**Mock Response:**
+```json
+{ "title": "GET upcoming subscription renewals" }
+```
+
+---
+
+### ⏰ Workflow Routes (`/api/workflow`)
+
+#### POST `/subscription/reminder`
+**Request Body:**
+```json
+{
+  "subscriptionId": "sub123"
+}
+```
+**Response:**
+```json
+{ "message": "Reminder workflow initiated" }
+```
+
+---
+
+## 🧪 How to Test
+This is a **backend-only** API. Use **Postman** to test all endpoints by sending appropriate HTTP requests.
+
+---
+
+## 🙌 Special Thanks
+Huge thanks to **JavaScript Mastery** for the amazing tutorial that inspired this project!
+
+---
+
+## ⚠️ Notes
+- Most routes are protected and require authentication.
+- Email reminders are dynamically scheduled via Upstash workflows.
+- Arcjet ensures API bot protection.
+
+---
+
+Happy Building! 🚀
+
