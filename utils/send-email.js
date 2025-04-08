@@ -1,12 +1,11 @@
-import { accountEmail } from "../config/nodemailer.js";
-import { transporter, emailTemplates } from "./email-template.js";
-
+import { emailTemplates } from "./email-template.js";
+import { accountEmail, transporter } from "../config/nodemailer.js";
 export const sendReminderEmail = async ({ to, type, subscription }) => {
   if (!to || !type) {
-    throw new Error("Missing required Parameters");
+    throw new Error("Missing required parameters");
   }
 
-  const template = emailTemplates.find((t) => t.label === type);
+  const template = emailTemplates.find((t) => t.label == type);
 
   if (!template) {
     throw new Error("Invalid email type");
@@ -15,29 +14,26 @@ export const sendReminderEmail = async ({ to, type, subscription }) => {
   const mailInfo = {
     userName: subscription.user.name,
     subscriptionName: subscription.name,
-    renewalDate: daysjs(subscription.renewalDate).format("MMM D, YYYY"),
+    renewalDate: dayjs(subscription.renewalDate).format("MMM D, YYYY"),
     planName: subscription.name,
     price: `${subscription.currency} ${subscription.price} (${subscription.frequency})`,
     paymentMethod: subscription.paymentMethod,
   };
 
   const message = template.generateBody(mailInfo);
-  const subject = template.generateSubject(mailInfo);
+  const subject = template.generateBody(mailInfo);
 
   const mailOptions = {
     from: accountEmail,
     to: to,
     subject: subject,
-    html: "message",
+    html: message,
   };
 
-  transporter.sendReminderEmail(mailOptions, (error, info) => {
-    if (error) return console.log(error, "error sending email");
-
-    console.log("Email sent: " + info.response);
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) return console.log("Error sending email");
+    else {
+      console.log("email sent : ", info.response);
+    }
   });
-
-  generateSubject(mailInfo);
-  let message = template.generateBody(mailInfo);
-  let subject = template;
 };
