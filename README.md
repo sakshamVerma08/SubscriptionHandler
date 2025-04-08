@@ -144,6 +144,4 @@ This project is licensed under the MIT License. Feel free to modify and use it.
 
 ## 📞 Contact
 
-For any issues, join our **Discord Community** with **50k+ members** or raise an issue on GitHub.
-
-Happy Coding! 🚀
+For any issues, you guys can connect with me on GitHub or my Linkedin (link in GitHub profile).
