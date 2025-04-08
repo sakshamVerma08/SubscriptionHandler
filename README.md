@@ -145,3 +145,7 @@ This project is licensed under the MIT License. Feel free to modify and use it.
 ## 📞 Contact
 
 For any issues, you guys can connect with me on GitHub or my Linkedin (link in GitHub profile).
+
+## COMMAND TO RUN UPSTASH SERVER FOR WORKFLOW
+
+npx @upstash/qstash-cli dev

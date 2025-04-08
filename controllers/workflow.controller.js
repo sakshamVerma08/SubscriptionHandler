@@ -5,11 +5,12 @@ const { serve } = require("@upstash/workflow/express");
 import Subscription from "../models/subscription.model.js";
 import { sendReminderEmail } from "../utils/send-email.js";
 
+
 export const sendReminders = serve(async (context) => {
   const REMINDERS = [7, 5, 2, 1];
   const { subscriptionId } = context.requestPayload;
   const subscription = await fetchSubscription(context, subscriptionId);
-
+  console.log(subscription);
   if (!subscription || subscription.status !== "active") {
     return;
   }
@@ -24,7 +25,7 @@ export const sendReminders = serve(async (context) => {
     return;
   }
 
-  for (const daysBefore of REMINDERS) {
+  for (let daysBefore of REMINDERS) {
     let reminderDate = renewalDate.subtract(daysBefore, "day");
     if (reminderDate.isAfter(dayjs())) {
       // If reminder date is not today, then put it to sleep
@@ -35,7 +36,13 @@ export const sendReminders = serve(async (context) => {
       );
     }
 
-    await triggerReminder(context, `Reminder ${daysBefore} days before`);
+    if (dayjs().isSame(reminderDate, "day")) {
+      await triggerReminder(
+        context,
+        `Reminder ${daysBefore} days before`,
+        subscription
+      );
+    }
   }
 });
 

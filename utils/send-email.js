@@ -1,4 +1,5 @@
 import { emailTemplates } from "./email-template.js";
+import dayjs from "dayjs";
 import { accountEmail, transporter } from "../config/nodemailer.js";
 export const sendReminderEmail = async ({ to, type, subscription }) => {
   if (!to || !type) {
@@ -20,6 +21,7 @@ export const sendReminderEmail = async ({ to, type, subscription }) => {
     paymentMethod: subscription.paymentMethod,
   };
 
+  // This part is responsible to generate the body of the email that is sent to the user's email.
   const message = template.generateBody(mailInfo);
   const subject = template.generateBody(mailInfo);
 
